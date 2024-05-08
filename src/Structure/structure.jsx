@@ -17,6 +17,16 @@ const Structure = ({ value, onChange }) => {
     }
   }, [value]);
 
+  const isFinishValue = (val) => {
+    const values = {
+      'string': 1,
+      'number': 1,
+      'boolean': 1
+    }
+
+    return !!values[typeof val]
+  }
+
   const handleToggle = (path) => {
     if (expandedKeys.includes(path.join("."))) {
       setExpandedKeys(expandedKeys.filter((item) => item !== path.join(".")));
@@ -50,27 +60,27 @@ const Structure = ({ value, onChange }) => {
 
     if (Array.isArray(val)) {
       return val.map((item, index) => (
-        <div key={index} style={{ marginLeft: marginLeft }}>
+        <div key={index} style={{ marginLeft: marginLeft, display:  isFinishValue(item) ? 'flex' : 'block', marginBottom: isFinishValue(value) ? '5px' : '0' }}>
           {renderValue(item, path.concat(index))}
-          {index !== val.length - 1 && <div className="divider"></div>}
+          {!isFinishValue(item) && <div className="divider"></div>}
         </div>
       ));
     } else if (typeof val === "object") {
       return Object.entries(val).map(([key, value], index) => (
-        <div key={index} style={{ marginLeft: marginLeft, display:  (typeof value === "string" || typeof value === "number" || typeof value === "boolean") ? 'flex' : 'block', justifyContent: 'space-between', marginBottom: '5px'}}>
+        <div key={index} style={{ marginLeft: marginLeft, display:  isFinishValue(value) ? 'flex' : 'block', justifyContent: 'space-between', marginBottom: '5px'}}>
           <div
             onClick={() => {
-              if ((typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean")) {
+              if (!isFinishValue(value)) {
                 handleToggle(path.concat(key))
               }
             }}
-            className={(typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean") ? 'structure' : 'value'}
+            className={!isFinishValue(value) ? 'structure' : 'value'}
           >
-            {key}:{(typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean") && <ExtraText value={'(click to show more)'}/>}
+            {key}:{!isFinishValue(value) && <ExtraText value={'(click to show more)'}/>}
           </div>
           {expandedKeys.includes(path.concat(key).join(".")) && renderValue(value, path.concat(key))}
-          {(typeof value === "string" || typeof value === "number"  || typeof value === "boolean") && (
-            <div style={{ display: "flex", alignItems: "center" }}>
+          {isFinishValue(value) && (
+            <div style={{ display: "flex", alignItems: "center"}}>
               <input
                 type="text"
                 value={value}
@@ -87,7 +97,7 @@ const Structure = ({ value, onChange }) => {
           type="text"
           value={val}
           onChange={(e) => handleInputChange(e.target.value, path)}
-          style={{ marginLeft: marginLeft }}
+          style={{ marginLeft: marginLeft, display: 'flex', flex: '1 1 auto' }}
         />
       );
     }
