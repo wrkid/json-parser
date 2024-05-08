@@ -57,19 +57,19 @@ const Structure = ({ value, onChange }) => {
       ));
     } else if (typeof val === "object") {
       return Object.entries(val).map(([key, value], index) => (
-        <div key={index} style={{ marginLeft: marginLeft, display:  (typeof value !== "string" || typeof value !== "number") ? 'flex' : 'block', justifyContent: 'space-between', marginBottom: '5px'}}>
+        <div key={index} style={{ marginLeft: marginLeft, display:  typeof value === 'string' ? 'flex' : 'block', justifyContent: 'space-between', marginBottom: '5px'}}>
           <div
             onClick={() => {
-              if (typeof value !== "string" || typeof value !== "number") {
+              if (typeof value !== "string") {
                 handleToggle(path.concat(key))
               }
             }}
-            className={(typeof value !== "string" || typeof value !== "number") ? 'structure' : 'value'}
+            className={typeof value !== 'string' ? 'structure' : 'value'}
           >
-            {key}:{(typeof value !== "string" || typeof value !== "number") && <ExtraText value={'(click to show more)'}/>}
+            {key}:{typeof value !== 'string' && <ExtraText value={'(click to show more)'}/>}
           </div>
           {expandedKeys.includes(path.concat(key).join(".")) && renderValue(value, path.concat(key))}
-          {(typeof value !== "string" || typeof value !== "number") && (
+          {typeof value === "string" && (
             <div style={{ display: "flex", alignItems: "center" }}>
               <input
                 type="text"
