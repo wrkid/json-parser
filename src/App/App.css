@@ -29,5 +29,7 @@
   max-width: 100%;
   word-wrap: normal;
   flex: 1 1 auto;
+  resize: vertical;
+  overflow-y: auto;
 }
 

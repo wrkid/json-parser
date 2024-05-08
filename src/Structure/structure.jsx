@@ -1,31 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import './style.css'
 
 const Structure = ({ value, onChange }) => {
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [parsedValue, setParsedValue] = useState(null);
   const [isValid, setIsValid] = useState(false);
+  const textareaRefs = useRef([]);
 
   useEffect(() => {
     try {
       const parsed = JSON.parse(value);
       setParsedValue(parsed);
-      setIsValid(true)
+      setIsValid(true);
     } catch (error) {
       console.error("Ошибка разбора JSON:", error);
-      setIsValid(false)
+      setIsValid(false);
     }
+    textareaRefs.current.forEach(autoResize);
   }, [value]);
+
+  useEffect(() => {
+    textareaRefs.current.forEach(autoResize);
+  }, [parsedValue, expandedKeys]);
 
   const isFinishValue = (val) => {
     const values = {
       'string': 1,
       'number': 1,
       'boolean': 1
-    }
-
-    return !!values[typeof val]
-  }
+    };
+    return !!values[typeof val];
+  };
 
   const handleToggle = (path) => {
     if (expandedKeys.includes(path.join("."))) {
@@ -37,21 +42,31 @@ const Structure = ({ value, onChange }) => {
 
   const handleInputChange = (newValue, path) => {
     if (!parsedValue) return;
-
+  
     const updatedValue = JSON.parse(JSON.stringify(parsedValue));
-
+  
     let target = updatedValue;
     for (let i = 0; i < path.length - 1; i++) {
       target = target[path[i]];
     }
     target[path[path.length - 1]] = newValue;
-
-    setParsedValue(updatedValue);
-
-    if (typeof onChange === "function") {
-      onChange(JSON.stringify(updatedValue));
+  
+    const containsOnlySpaces = newValue.trim() === '';
+  
+    if (!containsOnlySpaces) {
+      setParsedValue(updatedValue);
+      if (typeof onChange === "function") {
+        onChange(JSON.stringify(updatedValue));
+      }
     }
   };
+
+  function autoResize(textarea) {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = (textarea.scrollHeight + 2) + 'px';
+    }
+  }
 
   const renderValue = (val, path = []) => {
     if (!val) return null;
@@ -81,11 +96,16 @@ const Structure = ({ value, onChange }) => {
           {expandedKeys.includes(path.concat(key).join(".")) && renderValue(value, path.concat(key))}
           {isFinishValue(value) && (
             <div style={{ display: "flex", alignItems: "center"}}>
-              <input
+              <textarea
                 type="text"
                 value={value}
                 onChange={(e) => handleInputChange(e.target.value, path.concat(key))}
                 style={{ marginLeft: 10 }}
+                ref={(el) => {
+                  if (el && !textareaRefs.current.includes(el)) {
+                    textareaRefs.current.push(el);
+                  }
+                }}
               />
             </div>
           )}
@@ -93,11 +113,16 @@ const Structure = ({ value, onChange }) => {
       ));
     } else {
       return (
-        <input
+        <textarea
           type="text"
           value={val}
           onChange={(e) => handleInputChange(e.target.value, path)}
           style={{ marginLeft: marginLeft, display: 'flex', flex: '1 1 auto' }}
+          ref={(el) => {
+            if (el && !textareaRefs.current.includes(el)) {
+              textareaRefs.current.push(el);
+            }
+          }}
         />
       );
     }
