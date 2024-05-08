@@ -17,9 +17,7 @@ function App() {
     <div className="App">
       <div className="top">
         <div className="left">
-          <Structure value={value} onChange={handleInputChange}>
-
-          </Structure>
+          <Structure value={value} onChange={handleInputChange} />
         </div>
         <div className="right">
           <textarea className="input-json" onChange={handleInput} value={value}></textarea>
