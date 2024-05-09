@@ -95,12 +95,12 @@ const Structure = ({ value, onChange }) => {
           </div>
           {expandedKeys.includes(path.concat(key).join(".")) && renderValue(value, path.concat(key))}
           {isFinishValue(value) && (
-            <div style={{ display: "flex", alignItems: "center"}}>
+            <div style={{ display: "flex", alignItems: "center", flex: '1 1 auto'}}>
               <textarea
                 type="text"
                 value={value}
                 onChange={(e) => handleInputChange(e.target.value, path.concat(key))}
-                style={{ marginLeft: 10 }}
+                style={{ marginLeft: 10, display: 'flex', flex: '1 1 auto'  }}
                 ref={(el) => {
                   if (el && !textareaRefs.current.includes(el)) {
                     textareaRefs.current.push(el);
@@ -129,7 +129,7 @@ const Structure = ({ value, onChange }) => {
   };
 
   return (
-    <div>
+    <div style={{flex: '1 1 auto'}}>
       {isValid && renderValue(parsedValue, [])}
       {!isValid && <div>Невалидный JSON</div>}
     </div>

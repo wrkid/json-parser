@@ -12,6 +12,11 @@
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
+    width: 30px;
+}
+
+.value {
+  width: 70px;
 }
 
 .extra {
@@ -21,4 +26,5 @@
 
 textarea {
   resize: vertical;
+  overflow-y: auto;
 }
