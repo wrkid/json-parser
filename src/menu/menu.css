@@ -1,0 +1,37 @@
+.bg {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.512);
+  z-index: 1;
+  color: rgb(0, 0, 0)
+}
+
+.bg-hide {
+  display: none;
+}
+
+.menu-conatiner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 600px;
+  height: 500px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-title {
+  align-self: center;
+}
+
+.input-name {
+  width: 90%;
+  height: 40px;
+  align-self: center;
+}
