@@ -6,6 +6,7 @@ import { ContextMenu } from "../menu/menu";
 function App() {
   const [value, setValue] = useState('{"name": "ordersListView"}')
   const [menu, setMenu] = useState(false)
+  const [error, setError] = useState({value: false, title: ''})
 
   const handleInput = (e) => {
     setValue(e.target.value)
@@ -33,16 +34,23 @@ function App() {
       });
   }
 
-  const saveHandler = (name, value) => {
-    const prev = JSON.parse(localStorage.getItem('jsons'))
-    const item = {name: value}
+  const saveHandler = (name) => {
+    let prev = null
     let new_
-    if (prev) {
-      !prev.find(el => el.name === name) ? new_ = [...prev, item] : new_ = [...prev, item]
-    } else {
-      new_ = [item]
+    const item = {[name]: value}
+    try {
+      prev = JSON.parse(localStorage.getItem('jsons'))
+      const isIndex = !!prev[name]
+      if (isIndex) {
+        setError({value: true, title: ''})
+        return
+      } else {
+        new_ = {...prev, ...item}
+      }
+    } catch {
+      new_ = {...item}
     }
-    localStorage.setItem('jsons', new_)
+    localStorage.setItem('jsons', JSON.stringify(new_))
   }
 
   const menuHandler = (type) => {
@@ -51,7 +59,7 @@ function App() {
 
   return (
     <div className="App">
-      <ContextMenu shown={!!menu} menuHandler={menuHandler} saveHandler={saveHandler} type={menu}/>
+      <ContextMenu shown={!!menu} menuHandler={menuHandler} saveHandler={saveHandler} type={menu} setSaved={handleInput}/>
       <div className="top">
         <div className="left">
           <div className="top">
@@ -65,7 +73,7 @@ function App() {
         <div className="right">
           <div className="top">
             <div className="title">Type JSON here</div>
-            <button onClick={() => menuHandler('choose')}>Menu</button>
+            <button onClick={(e) => menuHandler('choose', e)}>Menu</button>
           </div>
           <div className="bottom">
             <textarea className="input-json" onChange={handleInput} value={value}></textarea>

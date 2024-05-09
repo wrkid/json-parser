@@ -24,6 +24,7 @@
   border-radius: 12px;
   display: flex;
   flex-direction: column;
+  padding: 12px;
 }
 
 .menu-title {
@@ -31,7 +32,31 @@
 }
 
 .input-name {
-  width: 90%;
+  flex: 0 1 auto;
   height: 40px;
   align-self: center;
+  width: 100%;
+  display: flex;
+  text-align: center;
+}
+
+.input-name::placeholder {
+  text-align: center;
+}
+
+.set-btn {
+  height: 40px;
+  margin-top: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.set-btn:hover {
+  opacity: 0.7;
+}
+
+.saved-item {
+  border: 1px solid black;
+  margin-bottom: 4px;
+  cursor: pointer;
 }

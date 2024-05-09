@@ -1,15 +1,55 @@
+import { useState } from 'react'
 import './menu.css'
 
-export const ContextMenu = ({shown, type, menuHandler, saveHandler}) => {
+export const ContextMenu = ({shown, type, menuHandler, saveHandler, setSaved}) => {
+  const [input, setInput] = useState('');
+
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleInputOnChange = (e) => {
+    const v = e.currentTarget.value 
+    setInput(v)
+  }
+  
+  const handleSet = (v) => {
+    setSaved(v)
+  }
+
+  const renderSaved = () => {
+    const ls = JSON.parse(window.localStorage.getItem('jsons'))
+    return Object.keys(ls).map((key, i) => {
+      return (
+        <div
+          key={key} 
+          className='saved-item'
+          onClick={() => handleSet({target: {value: ls[key]}})}
+        >{key}</div>
+      )
+    })
+  }
 
   return (
     <div className={`${shown ? 'bg' : 'bg-hide'}`} onClick={() => menuHandler(false)}>
-      {type === 'set' && <div className='menu-conatiner'>
+      {/* SET */}
+      {type === 'set' && <div className='menu-conatiner' onClick={handleMenuClick}>
         <h3 className='menu-title'>Save json</h3>
-        <input className='input-name' placeholder='Type name'/>
+        <input 
+          className='input-name' 
+          placeholder='Type name' 
+          value={input}
+          onChange={handleInputOnChange}
+        />
+        <button 
+          className='set-btn'
+          onClick={() => saveHandler(input)}
+        >Save</button>
       </div>}
-      {type === 'choose' && <div className='menu-conatiner'>
+      {/* CHOOSE */}
+      {type === 'choose' && <div className='menu-conatiner' onClick={handleMenuClick}>
         <h3 className='menu-title'>Choose saved</h3>
+        {renderSaved()}
       </div>}
     </div>
   )
