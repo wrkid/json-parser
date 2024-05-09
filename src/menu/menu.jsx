@@ -19,15 +19,21 @@ export const ContextMenu = ({shown, type, menuHandler, saveHandler, setSaved}) =
 
   const renderSaved = () => {
     const ls = JSON.parse(window.localStorage.getItem('jsons'))
-    return Object.keys(ls).map((key, i) => {
+    if (ls) {
+      return Object.keys(ls).map((key, i) => {
+        return (
+          <div
+            key={key} 
+            className='saved-item'
+            onClick={() => handleSet({target: {value: ls[key]}})}
+          >{key}</div>
+        )
+      })
+    } else {
       return (
-        <div
-          key={key} 
-          className='saved-item'
-          onClick={() => handleSet({target: {value: ls[key]}})}
-        >{key}</div>
+        <div>No JSONS saved</div>
       )
-    })
+    }
   }
 
   return (
