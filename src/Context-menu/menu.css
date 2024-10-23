@@ -56,7 +56,36 @@
 }
 
 .saved-item {
-  border: 1px solid black;
-  margin-bottom: 4px;
+  display: flex;
+  flex: 0 1 auto;
+  margin-bottom: 8px;
+  font-size: 20px;
+  margin-left: 16px;
+  margin-right: 60px;
+  justify-content: space-between;
+}
+
+.left-item:hover {
+  background-color: lightgray;
+}
+
+.left-item {
+  flex: 1 1 auto;
+  border-bottom: 1px solid black;
   cursor: pointer;
+
+}
+
+.right-item {
+  flex: 0 0 auto;
+  cursor: pointer;
+  margin-left: 12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.right-item:hover {
+  background-color: rgb(221, 102, 102);
 }

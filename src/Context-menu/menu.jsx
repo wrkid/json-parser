@@ -25,8 +25,15 @@ export const ContextMenu = ({shown, type, menuHandler, saveHandler, setSaved}) =
           <div
             key={key} 
             className='saved-item'
-            onClick={() => handleSet({target: {value: ls[key]}})}
-          >{key}</div>
+          >
+            <div 
+              className='left-item'
+              onClick={() => handleSet({target: {value: ls[key]}})}
+            >
+              {i+1}:  {key}
+            </div>
+            <div className='right-item'>x</div>
+          </div>
         )
       })
     } else {

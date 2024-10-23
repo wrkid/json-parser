@@ -1,0 +1,23 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 24px;
+  color: black;
+  margin-bottom: 24px;
+}
+
+.nav-item {
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.nav-item a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-item-active {
+  background-color: rgb(213, 220, 220);
+}
