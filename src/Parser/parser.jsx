@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 
-import './parser.css'
+import './parser.css';
 
 const markets = {
   title: 'Выберите магазин и платите частями',
   subtitle: 'А потом возвращайтесь в приложение и управляйте оплатой',
   levelTop: [],
   levelAll: []
-}
+};
 
 export const Parser = () => {
   const [jsonData, setJsonData] = useState(null);
@@ -121,7 +121,7 @@ export const Parser = () => {
   };
 
   return (
-    <div>
+    <div className='container'>
       <h1>BNPL partners Excel to JSON Parser</h1>
       <div className="file-upload-container">
         1. Выберите Excel файл
