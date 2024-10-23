@@ -1,4 +1,4 @@
-export const toSortData = (array) => {
+export const toSortByCategories = (array) => {
   const categoriesMap = new Set();
   const marketsByCategories = [];
 

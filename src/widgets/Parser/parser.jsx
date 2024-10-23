@@ -2,7 +2,7 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 
 import './parser.css';
-import { levellAllMarket, levelMediumMarket, levelTopMarket, sortLevels, toSortData } from '../../utils/helpers';
+import { levellAllMarket, levelMediumMarket, levelTopMarket, toSortByCategories } from '../../utils/helpers';
 
 const markets = {
   title: 'Выберите магазин и платите частями',
@@ -67,8 +67,8 @@ export const Parser = () => {
         return;
       }
 
-      const sortedCategories = toSortData(levelAll);
-      
+      const sortedCategories = toSortByCategories(levelAll);
+
       const jsonLevelTop = sortLevelTop(levelTop);
       const jsonLevelMedium = sortLevelMedium(sortedCategories);
       const jsonLevelAll = sortLevelAll(sortedCategories);
