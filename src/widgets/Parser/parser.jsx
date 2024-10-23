@@ -2,12 +2,12 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 
 import './parser.css';
+import { levellAllMarket, levelMediumMarket, levelTopMarket, sortLevels, toSortData } from '../../utils/helpers';
 
 const markets = {
   title: 'Выберите магазин и платите частями',
   subtitle: 'А потом возвращайтесь в приложение и управляйте оплатой',
   levelTop: [],
-  levelMedium: [],
   levelAll: []
 };
 
@@ -17,55 +17,33 @@ export const Parser = () => {
   const [osType, setOsType] = useState('web');
 
   const sortLevelTop = (array = []) => {
-    const levelTop = [];
-
-    array.forEach((el) => {
-      const market = {
-        category: el.category ?? '',
-        shop: el.shop ?? '',
-        pictureFileName: el[`pictureFileName_${osType}`] ?? '',
-        iconFileName: el.iconFileName ?? '',
-        description: el.description ?? '',
-        webLink: el[`webLink_${osType}`] ?? ''
-      };
-
-      levelTop.push(market);
-    });
-
-    return levelTop;
-  };
-
-  const sortLevelAll = (array = []) => {
-    const categoriesMap = new Set();
-    const levelAll = [];
-
-    array.forEach((el) => categoriesMap.add(el.category));
-
-    categoriesMap.forEach((category) => {
-      const filteredMarketsByCategory = array.filter((market) => market.category === category);
-
-      const categoryMarkets = [];
-
-      filteredMarketsByCategory.forEach((el) => {
-        const market = {
-          category: el.category ?? '',
-          shop: el.shop ?? '',
-          iconFileName: el.iconFileName ?? '',
-          bannerFileName: el.bannerFileName ?? '',
-          webLink: el[`webLink_${osType}`] ?? '',
-        };
-
-        categoryMarkets.push(market);
-      });
-
-      levelAll.push({ category, markets: categoryMarkets });
-    });
-
-    return levelAll;
+    if (!Array.isArray(array)) {
+      return [];
+    }
+    return array.map(el => levelTopMarket(el, osType));
   };
 
   const sortLevelMedium = (array = []) => {
-    return array.filter(el => (el.category === 'Бытовая техника' || el.category === 'Одежда и обувь'));
+    const levelMedium = [];
+    const categories = array.filter(el => (el.category === 'Бытовая техника' || el.category === 'Одежда и обувь'));
+
+    categories.forEach((category) => {
+      const categoryMarkets = category.markets.map((market) => levelMediumMarket(market, osType));
+      levelMedium.push({ category: category.category, markets: categoryMarkets });
+    });
+
+    return levelMedium;
+  };
+
+  const sortLevelAll = (categories = []) => {
+    const levelAll = [];
+
+    categories.forEach((category) => {
+      const categoryMarkets = category.markets.map((market) => levellAllMarket(market, osType));
+      levelAll.push({ category: category.category, markets: categoryMarkets });
+    });
+
+    return levelAll;
   };
 
   const handleFileChange = (event) => {
@@ -82,23 +60,24 @@ export const Parser = () => {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: 'array' });
 
-      const levelTop = workbook.Sheets[workbook.SheetNames[0]];
-      const levelAll = workbook.Sheets[workbook.SheetNames[1]];
+      const levelTop = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+      const levelAll = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]]);
 
-      const jsonLevelTop = sortLevelTop(XLSX.utils.sheet_to_json(levelTop));
-      const jsonLevelAll = sortLevelAll(XLSX.utils.sheet_to_json(levelAll));
-      const jsonLevelMedium = sortLevelMedium(jsonLevelAll);
-
-      let newJson = {}
-
-      if (osType === 'web') {
-        newJson = {...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll}
-        delete newJson.levelMedium
-        setJsonData(newJson);
-      } else {
-        newJson = { ...markets, levelTop: jsonLevelTop, levelMedium: jsonLevelMedium, levelAll: jsonLevelAll };
-        setJsonData(newJson);
+      if (!Array.isArray(levelTop) || !Array.isArray(levelAll)) {
+        return;
       }
+
+      const sortedCategories = toSortData(levelAll);
+      
+      const jsonLevelTop = sortLevelTop(levelTop);
+      const jsonLevelMedium = sortLevelMedium(sortedCategories);
+      const jsonLevelAll = sortLevelAll(sortedCategories);
+
+      let newJson = osType === 'web'
+        ? { ...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll }
+        : { ...markets, levelTop: jsonLevelTop, levelMedium: jsonLevelMedium, levelAll: jsonLevelAll };
+
+      setJsonData(newJson)
     };
 
     reader.readAsArrayBuffer(file);
