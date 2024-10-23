@@ -7,6 +7,7 @@ const markets = {
   title: 'Выберите магазин и платите частями',
   subtitle: 'А потом возвращайтесь в приложение и управляйте оплатой',
   levelTop: [],
+  levelMedium: [],
   levelAll: []
 };
 
@@ -52,7 +53,6 @@ export const Parser = () => {
           iconFileName: el.iconFileName ?? '',
           bannerFileName: el.bannerFileName ?? '',
           webLink: el[`webLink_${osType}`] ?? '',
-          description: el.description ?? ''
         };
 
         categoryMarkets.push(market);
@@ -64,7 +64,7 @@ export const Parser = () => {
     return levelAll;
   };
 
-  const sortLevelMiddle = (array = []) => {
+  const sortLevelMedium = (array = []) => {
     return array.filter(el => (el.category === 'Бытовая техника' || el.category === 'Одежда и обувь'));
   };
 
@@ -87,14 +87,17 @@ export const Parser = () => {
 
       const jsonLevelTop = sortLevelTop(XLSX.utils.sheet_to_json(levelTop));
       const jsonLevelAll = sortLevelAll(XLSX.utils.sheet_to_json(levelAll));
-      const jsonLevelMiddle = sortLevelMiddle(jsonLevelAll);
+      const jsonLevelMedium = sortLevelMedium(jsonLevelAll);
 
       let newJson = {}
 
       if (osType === 'web') {
-        setJsonData({ ...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll });
+        newJson = {...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll}
+        delete newJson.levelMedium
+        setJsonData(newJson);
       } else {
-        setJsonData({ ...markets, levelTop: jsonLevelTop, levelMiddle: jsonLevelMiddle, levelAll: jsonLevelAll });
+        newJson = { ...markets, levelTop: jsonLevelTop, levelMedium: jsonLevelMedium, levelAll: jsonLevelAll };
+        setJsonData(newJson);
       }
     };
 
@@ -111,7 +114,7 @@ export const Parser = () => {
   };
 
   const onDownloadClickHandle = () => {
-    const fileName = 'markets.json';
+    const fileName = osType === 'web' ? 'markets-web.json' : 'markets.json';
     const json = JSON.stringify(jsonData, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const href = URL.createObjectURL(blob);
