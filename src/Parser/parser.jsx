@@ -124,9 +124,8 @@ export const Parser = () => {
     <div className='container'>
       <h1>BNPL partners Excel to JSON Parser</h1>
       <div className="file-upload-container">
-        1. Выберите Excel файл
         <label htmlFor="file-upload" className="custom-file-upload">
-          Выбрать файл
+          Выберите Excel файл
         </label>
         <input 
           id="file-upload" 
@@ -138,8 +137,8 @@ export const Parser = () => {
       </div>
 
       {file && (
-        <>
-        2. Выберите тип приложения
+        <div className="app-type-container">
+          <p>Выберите тип приложения</p>
           <div className="switcher">
             <button
               className={osType === 'web' ? 'switcher_btn switcher_btn-active' : 'switcher_btn'}
@@ -157,7 +156,7 @@ export const Parser = () => {
           <button className="parse-btn" onClick={parseFile}>
             Создать JSON
           </button>
-        </>
+        </div>
       )}
 
       {jsonData && (
@@ -170,7 +169,7 @@ export const Parser = () => {
               Скачать JSON
             </button>
           </div>
-          <div>
+          <div className={`json-data-container`}>
             <h2>Parsed JSON Data:</h2>
             <pre>{JSON.stringify(jsonData, null, 2)}</pre>
           </div>
