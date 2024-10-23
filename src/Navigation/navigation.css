@@ -1,23 +1,35 @@
 .navigation {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 16px;
-  font-size: 24px;
-  color: black;
-  margin-bottom: 24px;
+  gap: 24px;
+  font-size: 20px;
+  margin-bottom: 30px;
+  background-color: #f4f6f8;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-item {
-  padding: 4px 8px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  cursor: pointer;
 }
 
-.nav-item a{
+.nav-item a {
   text-decoration: none;
-  color: inherit;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.nav-item:hover {
+  transform: scale(1.1);
 }
 
 .nav-item-active {
-  background-color: rgb(213, 220, 220);
+  background: linear-gradient(135deg, #3498db, #2ecc71);
+  color: white;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: scale(1.1);
 }

@@ -89,7 +89,13 @@ export const Parser = () => {
       const jsonLevelAll = sortLevelAll(XLSX.utils.sheet_to_json(levelAll));
       const jsonLevelMiddle = sortLevelMiddle(jsonLevelAll);
 
-      setJsonData({ ...markets, levelTop: jsonLevelTop, levelMiddle: jsonLevelMiddle, levelAll: jsonLevelAll });
+      let newJson = {}
+
+      if (osType === 'web') {
+        setJsonData({ ...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll });
+      } else {
+        setJsonData({ ...markets, levelTop: jsonLevelTop, levelMiddle: jsonLevelMiddle, levelAll: jsonLevelAll });
+      }
     };
 
     reader.readAsArrayBuffer(file);
