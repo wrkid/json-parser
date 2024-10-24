@@ -11,6 +11,20 @@ const nameMap = {
   webLink_web: 'webLink_web'
 }
 
+const fieldValue = (data = {}, field = '', osType = '') => {
+  const map = {
+    category: data[nameMap.category] ?? '',
+    shop: data[nameMap.shop] ?? '',
+    pictureFileName: data[`${nameMap[`pictureFileName_${osType}`]}`] ?? '',
+    iconFileName: data[nameMap.iconFileName] ?? '',
+    description: data[nameMap.description] ?? '',
+    webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? '',
+    bannerFileName: data[nameMap.bannerFileName] ?? ''
+  }
+
+  return map[field]
+}
+
 export const toSortByCategories = (array) => {
   const categoriesMap = new Set();
   const marketsByCategories = [];
@@ -34,12 +48,12 @@ export const toSortByCategories = (array) => {
 
 export const levelTopMarket = (data = {}, osType = '') => {
   return {
-    category: data[nameMap.category] ?? '',
-    shop: data[nameMap.shop] ?? '',
-    pictureFileName: data[`${nameMap[`pictureFileName_${osType}`]}`] ?? '',
-    iconFileName: data[nameMap.iconFileName] ?? '',
-    description: data[nameMap.description] ?? '',
-    webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
+    category: fieldValue(data, 'category', osType),
+    shop: fieldValue(data, 'shop', osType),
+    pictureFileName: fieldValue(data, 'pictureFileName', osType),
+    iconFileName: fieldValue(data, 'iconFileName', osType),
+    description: fieldValue(data, 'description', osType),
+    webLink: fieldValue(data, 'webLink', osType)
   }
 }
 
@@ -48,15 +62,15 @@ export const levellAllMarket = (data = {}, osType = 'web') => {
 
   if (osType === 'mobile') {
     market = {
-      shop: data[nameMap.shop] ?? '',
-      iconFileName: data[nameMap.iconFileName] ?? '',
-      webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
+      shop: fieldValue(data, 'shop', osType),
+      iconFileName: fieldValue(data, 'iconFileName', osType),
+      webLink: fieldValue(data, 'webLink', osType)
     }
   } else if (osType === 'web') {
     market = {
-      shop: data[nameMap.shop] ?? '',
-      bannerFileName: data[nameMap.bannerFileName] ?? '',
-      webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
+      shop: fieldValue(data, 'shop', osType),
+      bannerFileName: fieldValue(data, 'bannerFileName', osType),
+      webLink: fieldValue(data, 'webLink', osType)
     }
   }
 
@@ -65,9 +79,9 @@ export const levellAllMarket = (data = {}, osType = 'web') => {
 
 export const levelMediumMarket = (data = {}, osType = 'web') => {
   return {
-    shop: data[nameMap.shop] ?? '',
-    iconFileName: data[nameMap.iconFileName] ?? '',
-    webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? '',
-    description: data[nameMap.description] ?? ''
+    shop: fieldValue(data, 'shop', osType),
+    iconFileName: fieldValue(data, 'iconFileName', osType),
+    webLink: fieldValue(data, 'webLink', osType),
+    description: fieldValue(data, 'description', osType)
   }
 }
