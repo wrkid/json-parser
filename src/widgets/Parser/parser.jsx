@@ -8,6 +8,7 @@ const markets = {
   title: 'Выберите магазин и платите частями',
   subtitle: 'А потом возвращайтесь в приложение и управляйте оплатой',
   levelTop: [],
+  levelMedium: [],
   levelAll: []
 };
 
@@ -76,6 +77,8 @@ export const Parser = () => {
       let newJson = osType === 'web'
         ? { ...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll }
         : { ...markets, levelTop: jsonLevelTop, levelMedium: jsonLevelMedium, levelAll: jsonLevelAll };
+
+      if (osType === 'web') delete newJson.levelMedium
 
       setJsonData(newJson)
     };
