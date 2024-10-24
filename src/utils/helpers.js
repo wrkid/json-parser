@@ -1,3 +1,16 @@
+// мапа названия полей в Excel таблице
+const nameMap = {
+  shop: 'shop',
+  category: 'category',
+  pictureFileName_web: 'pictureFileName_web',
+  pictureFileName_mobile: 'pictureFileName_mobile',
+  iconFileName: 'iconFileName',
+  bannerFileName: 'bannerFileName',
+  description: 'description',
+  webLink_mobile: 'webLink_mobile',
+  webLink_web: 'webLink_web'
+}
+
 export const toSortByCategories = (array) => {
   const categoriesMap = new Set();
   const marketsByCategories = [];
@@ -19,14 +32,14 @@ export const toSortByCategories = (array) => {
   return marketsByCategories
 }
 
-export const levelTopMarket = (market = {}, osType = '') => {
+export const levelTopMarket = (data = {}, osType = '') => {
   return {
-    category: market.category ?? '',
-    shop: market.shop ?? '',
-    pictureFileName: market[`pictureFileName_${osType}`] ?? '',
-    iconFileName: market.iconFileName ?? '',
-    description: market.description ?? '',
-    webLink: market[`webLink_${osType}`] ?? ''
+    category: data[nameMap.category] ?? '',
+    shop: data[nameMap.shop] ?? '',
+    pictureFileName: data[`${nameMap[`pictureFileName_${osType}`]}`] ?? '',
+    iconFileName: data[nameMap.iconFileName] ?? '',
+    description: data[nameMap.description] ?? '',
+    webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
   }
 }
 
@@ -35,17 +48,15 @@ export const levellAllMarket = (data = {}, osType = 'web') => {
 
   if (osType === 'mobile') {
     market = {
-      // category: data.category ?? '',
-      shop: data.shop ?? '',
-      iconFileName: data.iconFileName ?? '',
-      webLink: data[`webLink_${osType}`] ?? ''
+      shop: data[nameMap.shop] ?? '',
+      iconFileName: data[nameMap.iconFileName] ?? '',
+      webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
     }
   } else if (osType === 'web') {
     market = {
-      // category: data.category ?? '',
-      shop: data.shop ?? '',
-      bannerFileName: data.bannerFileName ?? '',
-      webLink: data[`webLink_${osType}`] ?? ''
+      shop: data[nameMap.shop] ?? '',
+      bannerFileName: data[nameMap.bannerFileName] ?? '',
+      webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? ''
     }
   }
 
@@ -54,10 +65,9 @@ export const levellAllMarket = (data = {}, osType = 'web') => {
 
 export const levelMediumMarket = (data = {}, osType = 'web') => {
   return {
-    // category: data.category ?? '',
-    shop: data.shop ?? '',
-    iconFileName: data.iconFileName ?? '',
-    webLink: data[`webLink_${osType}`] ?? '',
-    description: data.description
+    shop: data[nameMap.shop] ?? '',
+    iconFileName: data[nameMap.iconFileName] ?? '',
+    webLink: data[`${nameMap[`webLink_${osType}`]}`] ?? '',
+    description: data[nameMap.description] ?? ''
   }
 }
