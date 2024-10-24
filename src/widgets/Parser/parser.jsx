@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-
 import './parser.css';
+
+import FileUploader from './fileUploader';
+import OsSwitcher from './osSwitcher';
+import JsonActions from './jsonActions';
+import JsonDisplay from './jsonDisplay';
+
 import { levellAllMarket, levelMediumMarket, levelTopMarket, toSortByCategories } from '../../utils/helpers';
 
 const markets = {
@@ -78,9 +83,9 @@ export const Parser = () => {
         ? { ...markets, levelTop: jsonLevelTop, levelAll: jsonLevelAll }
         : { ...markets, levelTop: jsonLevelTop, levelMedium: jsonLevelMedium, levelAll: jsonLevelAll };
 
-      if (osType === 'web') delete newJson.levelMedium
+      if (osType === 'web') delete newJson.levelMedium;
 
-      setJsonData(newJson)
+      setJsonData(newJson);
     };
 
     reader.readAsArrayBuffer(file);
@@ -114,56 +119,12 @@ export const Parser = () => {
   return (
     <div className='container'>
       <h1>BNPL partners Excel to JSON Parser</h1>
-      <div className="file-upload-container">
-        <label htmlFor="file-upload" className="custom-file-upload">
-          Выберите Excel файл
-        </label>
-        <input 
-          id="file-upload" 
-          className="input_btn" 
-          type="file" 
-          accept=".xlsx, .xls" 
-          onChange={handleFileChange} 
-        />
-      </div>
-
-      {file && (
-        <div className="app-type-container">
-          <p>Выберите тип приложения</p>
-          <div className="switcher">
-            <button
-              className={osType === 'web' ? 'switcher_btn switcher_btn-active' : 'switcher_btn'}
-              onClick={() => handleOsSwitch('web')}
-            >
-              Web
-            </button>
-            <button
-              className={osType === 'mobile' ? 'switcher_btn switcher_btn-active' : 'switcher_btn'}
-              onClick={() => handleOsSwitch('mobile')}
-            >
-              Mobile
-            </button>
-          </div>
-          <button className="parse-btn" onClick={parseFile}>
-            Создать JSON
-          </button>
-        </div>
-      )}
-
+      <FileUploader onFileChange={handleFileChange} />
+      {file && <OsSwitcher osType={osType} onSwitch={handleOsSwitch} onParse={parseFile} />}
       {jsonData && (
         <>
-          <div className="buttons">
-            <button className="save_json_btn" onClick={onCopyClickHandle}>
-              Скопировать JSON
-            </button>
-            <button className="save_json_btn" onClick={onDownloadClickHandle}>
-              Скачать JSON
-            </button>
-          </div>
-          <div className={`json-data-container`}>
-            <h2>Parsed JSON Data:</h2>
-            <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-          </div>
+          <JsonActions jsonData={jsonData} onCopy={onCopyClickHandle} onDownload={onDownloadClickHandle} />
+          <JsonDisplay jsonData={jsonData} />
         </>
       )}
     </div>
